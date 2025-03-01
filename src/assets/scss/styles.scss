@@ -1,0 +1,242 @@
+@import "bootstrap/scss/bootstrap";
+
+@font-face {
+  font-family: "Soloist";
+  src: url("../fonts/soloist1.ttf") format("truetype");
+}
+
+$font-family-star-wars: "Soloist", sans-serif;
+$color-dark-bg: #0c0c0d;
+$color-light-text: #eaeaea;
+$color-primary: #ffd700;
+$color-secondary: #bb0000;
+$button-color: #007bff;
+
+body {
+  font-family: $font-family-star-wars;
+  background-color: $color-dark-bg;
+  color: $color-light-text;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: $color-primary;
+}
+
+.main-content {
+  padding: 1rem;
+}
+
+.loading {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.search-query,
+.total-results {
+  text-align: center;
+  margin: 1rem 0;
+}
+
+.search-bar-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 0 1rem;
+  box-sizing: border-box;
+
+  @media (min-width: 768px) {
+    justify-content: center;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+}
+
+.search-bar {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  width: 100%;
+  max-width: 500px;
+
+  input[type="text"] {
+    background-color: #222;
+    color: $color-light-text;
+    border: 1px solid #444;
+    border-radius: 0.25rem;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  button[type="submit"] {
+    background-color: $button-color;
+    color: $color-light-text;
+    border: none;
+    border-radius: 0.25rem;
+    padding: 0.5rem 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s, box-shadow 0.3s;
+
+    &:hover {
+      background-color: darken($button-color, 10%);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  @media (min-width: 576px) {
+    flex-direction: row;
+
+    input[type="text"] {
+      flex: 1;
+      margin-bottom: 0;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    button[type="submit"] {
+      flex: 0 0 auto;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      margin-left: -1px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    input[type="text"] {
+      padding: 0.75rem;
+    }
+
+    button[type="submit"] {
+      padding: 0.75rem 1.5rem;
+    }
+  }
+}
+
+.item-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.item-card {
+  background-color: #333;
+  border: none;
+  color: $color-light-text;
+  margin-bottom: 1rem;
+  .card-img-top {
+    border-bottom: 1px solid #444;
+  }
+  .card-title {
+    font-size: 1.2rem;
+  }
+}
+
+.detail-card {
+  background-color: #333;
+  border: none;
+  color: $color-light-text;
+  margin-top: 1rem;
+  .card-img-top {
+    width: 100%;
+    border-bottom: 1px solid #444;
+  }
+}
+
+.film-attributes {
+  margin-top: 1rem;
+}
+
+.attribute-section {
+  margin-top: 1rem;
+  ul {
+    list-style: none;
+    padding: 0;
+    li {
+      margin-bottom: 0.5rem;
+    }
+  }
+}
+
+.opening-crawl {
+  margin-top: 1rem;
+  background-color: #222;
+  padding: 1rem;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.back-button-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.back-button {
+  background-color: $button-color;
+  color: $color-light-text;
+  border: none;
+  border-radius: 0.25rem;
+  padding: 0.5rem 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s, box-shadow 0.3s;
+
+  &:hover {
+    background-color: darken($button-color, 10%);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+
+  button {
+    background-color: $button-color;
+    color: $color-light-text;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    margin: 0 0.25rem;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: darken($button-color, 10%);
+    }
+
+    &:disabled {
+      background-color: lighten($button-color, 30%);
+      cursor: not-allowed;
+    }
+  }
+
+  span {
+    margin: 0 0.5rem;
+    align-self: center;
+  }
+}
+
+@media (min-width: 576px) {
+  .item-card {
+    flex: 0 0 calc(50% - 1rem);
+  }
+}
+
+@media (min-width: 768px) {
+  .item-card {
+    flex: 0 0 calc(33.3333% - 1rem);
+  }
+}
