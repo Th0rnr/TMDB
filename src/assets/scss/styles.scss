@@ -1,28 +1,68 @@
-@import "bootstrap/scss/bootstrap";
+@import url("https://fonts.googleapis.com/css2?family=Anton&display=swap");
 
-@font-face {
-  font-family: "Soloist";
-  src: url("../fonts/soloist1.ttf") format("truetype");
+$primary-color: #007bff;
+$light-bg: #f6f6f6;
+$dark-bg: #28282b;
+$light-text: #000000;
+$dark-text: #ffffff;
+
+@mixin button-style {
+  background-color: $primary-color;
+  color: $light-text;
+  border: 1px solid $primary-color;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 1.25rem;
+  margin: 0.5rem;
+  font-family: "Anton", sans-serif;
+
+  &:hover {
+    background-color: darken($primary-color, 10%);
+    border-color: darken($primary-color, 10%);
+  }
 }
 
-$font-family-star-wars: "Soloist", sans-serif;
-$color-dark-bg: #0c0c0d;
-$color-light-text: #eaeaea;
-$color-primary: #ffd700;
-$color-secondary: #bb0000;
-$button-color: #007bff;
+@mixin theme($bg-color, $text-color) {
+  background-color: $bg-color;
+  color: $text-color;
 
-body {
-  font-family: $font-family-star-wars;
-  background-color: $color-dark-bg;
-  color: $color-light-text;
-  margin: 0;
-  padding: 0;
+  .movie-card {
+    background-color: $bg-color;
+    color: $text-color;
+    font-family: monospace;
+  }
+
+  .movie-title {
+    color: $text-color;
+    font-family: monospace;
+  }
+
+  .pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+
+    button {
+      @include button-style;
+    }
+
+    .pagination-text {
+      margin: 0.5rem;
+      font-family: "Anton", sans-serif;
+    }
+  }
 }
 
-a {
-  text-decoration: none;
-  color: inherit;
+body.light {
+  @include theme($light-bg, $light-text);
+  font-family: monospace;
+}
+
+body.dark {
+  @include theme($dark-bg, $dark-text);
+  font-family: monospace;
 }
 
 h1,
@@ -30,213 +70,144 @@ h2,
 h3,
 h4,
 h5,
-h6 {
-  color: $color-primary;
+h6,
+.navbar-brand {
+  font-weight: bold;
+  font-family: "Anton", sans-serif;
+}
+.film-title,
+.actor-name {
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+p {
+  font-family: monospace;
 }
 
-.main-content {
-  padding: 1rem;
-}
-
-.loading {
-  text-align: center;
-  margin-top: 2rem;
-}
-
-.search-query,
-.total-results {
-  text-align: center;
-  margin: 1rem 0;
-}
-
-.search-bar-container {
+.loading-spinner {
   display: flex;
   justify-content: center;
-  width: 100%;
-  padding: 0 1rem;
-  box-sizing: border-box;
+  align-items: center;
+  height: 100vh;
+  font-family: monospace;
+}
 
-  @media (min-width: 768px) {
+.movies-container {
+  padding: 1rem;
+  font-family: monospace;
+
+  .movies-title {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .movies-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
     justify-content: center;
-    max-width: 800px;
-    margin: 0 auto;
+
+    .movie-col {
+      flex: 1 1 100%;
+      max-width: 100%;
+
+      @media (min-width: 768px) {
+        flex: 1 1 calc(50% - 1rem);
+        max-width: calc(50% - 1rem);
+      }
+
+      @media (min-width: 992px) {
+        flex: 1 1 calc(25% - 1rem);
+        max-width: calc(25% - 1rem);
+      }
+
+      .movie-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        border: none;
+
+        .movie-poster {
+          width: 100%;
+          height: auto;
+          border-radius: 0.5rem;
+        }
+
+        .movie-body {
+          padding: 0.5rem;
+        }
+      }
+    }
+  }
+
+  .pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+
+    button {
+      @include button-style;
+    }
+
+    .pagination-text {
+      margin: 0.5rem;
+      font-family: "Anton", sans-serif;
+    }
   }
 }
 
-.search-bar {
+.back-button-container,
+.trailer-button-container {
   display: flex;
-  flex-direction: column;
+  justify-content: flex-start;
   margin-bottom: 1rem;
-  width: 100%;
-  max-width: 500px;
-
-  input[type="text"] {
-    background-color: #222;
-    color: $color-light-text;
-    border: 1px solid #444;
-    border-radius: 0.25rem;
-    padding: 0.5rem;
-    margin-bottom: 0.5rem;
-  }
-
-  button[type="submit"] {
-    background-color: $button-color;
-    color: $color-light-text;
-    border: none;
-    border-radius: 0.25rem;
-    padding: 0.5rem 1rem;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.3s, box-shadow 0.3s;
-
-    &:hover {
-      background-color: darken($button-color, 10%);
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-    }
-  }
-
-  @media (min-width: 576px) {
-    flex-direction: row;
-
-    input[type="text"] {
-      flex: 1;
-      margin-bottom: 0;
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
-    }
-
-    button[type="submit"] {
-      flex: 0 0 auto;
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
-      margin-left: -1px;
-    }
-  }
-
-  @media (min-width: 768px) {
-    input[type="text"] {
-      padding: 0.75rem;
-    }
-
-    button[type="submit"] {
-      padding: 0.75rem 1.5rem;
-    }
-  }
-}
-
-.item-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: center;
-}
-
-.item-card {
-  background-color: #333;
-  border: none;
-  color: $color-light-text;
-  margin-bottom: 1rem;
-  .card-img-top {
-    border-bottom: 1px solid #444;
-  }
-  .card-title {
-    font-size: 1.2rem;
-  }
-}
-
-.detail-card {
-  background-color: #333;
-  border: none;
-  color: $color-light-text;
-  margin-top: 1rem;
-  .card-img-top {
-    width: 100%;
-    border-bottom: 1px solid #444;
-  }
-}
-
-.film-attributes {
-  margin-top: 1rem;
-}
-
-.attribute-section {
-  margin-top: 1rem;
-  ul {
-    list-style: none;
-    padding: 0;
-    li {
-      margin-bottom: 0.5rem;
-    }
-  }
-}
-
-.opening-crawl {
-  margin-top: 1rem;
-  background-color: #222;
-  padding: 1rem;
-  border-radius: 5px;
-  font-size: 1rem;
-}
-
-.back-button-container {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  margin-bottom: 1rem;
-}
-
-.back-button {
-  background-color: $button-color;
-  color: $color-light-text;
-  border: none;
-  border-radius: 0.25rem;
-  padding: 0.5rem 1rem;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.3s, box-shadow 0.3s;
-
-  &:hover {
-    background-color: darken($button-color, 10%);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-  }
-}
-
-.pagination-container {
-  display: flex;
-  justify-content: center;
-  margin-top: 1rem;
 
   button {
-    background-color: $button-color;
-    color: $color-light-text;
-    border: none;
-    border-radius: 0.5rem;
-    padding: 0.5rem 1rem;
-    margin: 0 0.25rem;
-    transition: background-color 0.3s;
-
-    &:hover {
-      background-color: darken($button-color, 10%);
-    }
-
-    &:disabled {
-      background-color: lighten($button-color, 30%);
-      cursor: not-allowed;
-    }
-  }
-
-  span {
-    margin: 0 0.5rem;
-    align-self: center;
+    @include button-style;
   }
 }
 
-@media (min-width: 576px) {
-  .item-card {
-    flex: 0 0 calc(50% - 1rem);
-  }
+.show-trailer-button {
+  @include button-style;
 }
 
-@media (min-width: 768px) {
-  .item-card {
-    flex: 0 0 calc(33.3333% - 1rem);
+.loading-spinner-overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.navbar {
+  padding: 1.5rem 2rem;
+  font-size: 1.25rem;
+}
+
+.navbar .navbar-brand {
+  font-family: "Anton", sans-serif;
+  font-size: 2.5rem;
+}
+
+.navbar .mx-auto {
+  font-family: "Anton", sans-serif;
+}
+
+.navbar .nav-link,
+.navbar .dropdown-item {
+  font-family: monospace;
+  font-size: 1.25rem;
+}
+
+.img-fluid {
+  border-radius: 0.5rem;
+}
+
+.movies-container {
+  h3 {
+    text-align: center;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
   }
 }

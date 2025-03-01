@@ -1,62 +1,151 @@
 import axios from "axios";
 import {
-  Film,
-  People,
-  Planet,
-  Species,
-  Starship,
-  Vehicle,
-} from "../types/apiTypes";
+  ConfigurationResponse,
+  NowPlayingResponse,
+  Genre,
+  MovieDetailsResponse,
+  CreditsResponse,
+  ActorDetailsResponse,
+  SearchMoviesResponse,
+  SearchActorsResponse,
+} from "../types/types";
 
-const API_URL = "https://swapi.thehiveresistance.com/api";
+const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
+const BASE_URL = "https://api.themoviedb.org/3";
 
-const fetchData = async <T>(endpoint: string, params = {}): Promise<T> => {
-  const response = await axios.get<T>(`${API_URL}/${endpoint}`, { params });
-  return response.data;
+const instance = axios.create({
+  baseURL: BASE_URL,
+  timeout: 10000,
+  headers: {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  },
+  params: {
+    api_key: API_KEY,
+    include_adult: false,
+  },
+});
+
+const fetchData = async <T>(url: string, params = {}): Promise<T> => {
+  try {
+    const response = await instance.get(url, {
+      params: { ...params, include_adult: false },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching data from ${url}:`, error);
+    throw error;
+  }
 };
-interface FetchParams {
-  search?: string;
-  page?: number;
-  query?: string;
-}
 
-const getResource = async <T>(
-  resource: string,
-  params: FetchParams = {}
-): Promise<T[]> => {
-  const response = await fetchData<{ data: T[] }>(resource, params);
-  return response.data;
+const validatePage = (page: number): number => {
+  return page > 500 ? 500 : page;
 };
 
-const getResourceById = <T>(resource: string, id: string): Promise<T> => {
-  return fetchData<T>(`${resource}/${id}`);
+export const getConfiguration = (): Promise<ConfigurationResponse> => {
+  return fetchData<ConfigurationResponse>("/configuration");
 };
 
-export const api = {
-  films: {
-    list: (params: FetchParams = {}) => getResource<Film>("films", params),
-    detail: (id: string) => getResourceById<Film>("films", id),
-  },
-  people: {
-    list: (params: FetchParams = {}) => getResource<People>("people", params),
-    detail: (id: string) => getResourceById<People>("people", id),
-  },
-  planets: {
-    list: (params: FetchParams = {}) => getResource<Planet>("planets", params),
-    detail: (id: string) => getResourceById<Planet>("planets", id),
-  },
-  species: {
-    list: (params: FetchParams = {}) => getResource<Species>("species", params),
-    detail: (id: string) => getResourceById<Species>("species", id),
-  },
-  starships: {
-    list: (params: FetchParams = {}) =>
-      getResource<Starship>("starships", params),
-    detail: (id: string) => getResourceById<Starship>("starships", id),
-  },
-  vehicles: {
-    list: (params: FetchParams = {}) =>
-      getResource<Vehicle>("vehicles", params),
-    detail: (id: string) => getResourceById<Vehicle>("vehicles", id),
-  },
+export const getNowPlayingMovies = (
+  page: number = 1
+): Promise<NowPlayingResponse> => {
+  return fetchData<NowPlayingResponse>("/movie/now_playing", {
+    language: "en-US",
+    page: validatePage(page),
+  });
+};
+
+export const getTrendingMovies = (
+  period: "day" | "week" = "day",
+  page: number = 1
+): Promise<NowPlayingResponse> => {
+  return fetchData<NowPlayingResponse>(`/trending/movie/${period}`, {
+    language: "en-US",
+    page: validatePage(page),
+  });
+};
+
+export const getTopRatedMovies = (
+  page: number = 1
+): Promise<NowPlayingResponse> => {
+  return fetchData<NowPlayingResponse>("/movie/top_rated", {
+    language: "en-US",
+    page: validatePage(page),
+  });
+};
+
+export const getMoviesByGenre = (
+  genreId: number,
+  page: number = 1
+): Promise<NowPlayingResponse> => {
+  return fetchData<NowPlayingResponse>("/discover/movie", {
+    with_genres: genreId,
+    language: "en-US",
+    page: validatePage(page),
+  });
+};
+
+export const getGenres = async (): Promise<Genre[]> => {
+  const data = await fetchData<{ genres: Genre[] }>("/genre/movie/list", {
+    language: "en-US",
+  });
+  return data.genres;
+};
+
+export const getMovieDetails = (
+  movieId: number
+): Promise<MovieDetailsResponse> => {
+  return fetchData<MovieDetailsResponse>(`/movie/${movieId}`, {
+    language: "en-US",
+    append_to_response: "credits,videos",
+  });
+};
+
+export const getSimilarMovies = (
+  movieId: number,
+  page: number = 1
+): Promise<NowPlayingResponse> => {
+  return fetchData<NowPlayingResponse>(`/movie/${movieId}/similar`, {
+    language: "en-US",
+    page: validatePage(page),
+  });
+};
+
+export const getMovieCredits = (movieId: number): Promise<CreditsResponse> => {
+  return fetchData<CreditsResponse>(`/movie/${movieId}/credits`, {
+    language: "en-US",
+  });
+};
+
+export const getActorDetails = (
+  actorId: number
+): Promise<ActorDetailsResponse> => {
+  return fetchData<ActorDetailsResponse>(`/person/${actorId}`, {
+    language: "en-US",
+    append_to_response: "movie_credits",
+  });
+};
+
+export const searchMovies = (
+  query: string,
+  page: number = 1
+): Promise<SearchMoviesResponse> => {
+  return fetchData<SearchMoviesResponse>("/search/movie", {
+    query,
+    language: "en-US",
+    page: validatePage(page),
+    include_adult: false,
+  });
+};
+
+export const searchActors = (
+  query: string,
+  page: number = 1
+): Promise<SearchActorsResponse> => {
+  return fetchData<SearchActorsResponse>("/search/person", {
+    query,
+    language: "en-US",
+    page: validatePage(page),
+    include_adult: false,
+  });
 };
